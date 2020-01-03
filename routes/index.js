@@ -21,8 +21,18 @@ router.get("/", function(req, res, next) {
   });
 
   query.on("end", () => {
-    res.status(200).render("index", { title: "Nodejs-labs", testData: rows });
+    res.status(200).render("index", { title: "Nodejs-labs", testData: rows, rows: [] });
   });
+});
+
+router.get('/user', function(req, res, next) {
+  const query = client.query("SELECT * FROM users;");
+  const rows = [];
+  query.on("row", (result) => {
+    console.log(result);
+    rows.push(result);
+  });
+  res.send(rows);
 });
 
 module.exports = router;
