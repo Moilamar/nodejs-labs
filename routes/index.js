@@ -8,13 +8,19 @@ const connectionString = "postgres://postgres:postgres@localhost:5432/express_ps
 const client = new pg.Client(connectionString);
 client.connect();
 
-var sequelize = new Sequelize(connectionString);
+var sequelize = new Sequelize(connectionString, {
+  dialect: 'postgres',
+  define: {
+    timestamps: false
+  }
+});
 
 var User = sequelize.define('test_data', {
   id: {
     type: Sequelize.STRING,
     field: 'id',
     primaryKey: true,
+    autoIncrement: true,
   },
   name: {
     type: Sequelize.STRING,
@@ -50,6 +56,13 @@ router.get('/user', function(req, res, next) {
     rows.push(result);
   });
   res.send(rows);
+});
+
+router.post('/user', function(req, res, next) {
+  console.log(req.body)
+  return User.create({
+    name: req.body.name,
+  });
 });
 
 module.exports = router;
