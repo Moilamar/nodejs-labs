@@ -1,11 +1,28 @@
 var express = require("express");
 var router = express.Router();
+var Sequelize = require('sequelize');
 
 const pg = require("pg");
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/express_psql";
 const client = new pg.Client(connectionString);
 client.connect();
+
+var sequelize = new Sequelize(connectionString);
+
+var User = sequelize.define('test_data', {
+  id: {
+    type: Sequelize.STRING,
+    field: 'id',
+    primaryKey: true,
+  },
+  name: {
+    type: Sequelize.STRING,
+    field: "name",
+  }
+}, {
+  freezeTableName: true // Model tableName will be the same as the model name
+});
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
